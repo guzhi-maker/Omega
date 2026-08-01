@@ -28,10 +28,13 @@ const omegaApi = {
     sendMessage: (payload: { text: string; includeScreenshot: boolean }) =>
       ipcRenderer.invoke("ai:sendMessage", payload)
   },
-  // BetterGI: launch & status
-  bettergi: {
-    launch: () => ipcRenderer.invoke("bettergi:launch"),
-    status: () => ipcRenderer.invoke("bettergi:status"),
+  // 代打服务：前端只与 Ω 交互，引擎由后端封装
+  gamebot: {
+    start: () => ipcRenderer.invoke("gamebot:start"),
+    stop: () => ipcRenderer.invoke("gamebot:stop"),
+    status: () => ipcRenderer.invoke("gamebot:status"),
+    runTask: (taskId: string) => ipcRenderer.invoke("gamebot:runTask", taskId),
+    stopTask: () => ipcRenderer.invoke("gamebot:stopTask"),
   },
   options: {
     generate: (omegaText: string, history?: { speaker: string; text: string; createdAt: string }[]) =>

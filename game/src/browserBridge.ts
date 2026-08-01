@@ -172,14 +172,15 @@ export function installBrowserBridge() {
   if (window.omega) return;
 
   window.omega = {
-  bettergi: {
-    launch: async () => {
-      console.log("[Browser] BetterGI launch requested - not available in browser mode");
-      return { success: false, error: "BetterGI is only available in Electron mode" };
+  gamebot: {
+    start: async () => {
+      console.log("[Browser] gamebot start requested - not available in browser mode");
+      return { success: false, error: "代打服务仅支持 Electron 桌面模式" };
     },
-    status: async () => {
-      return { running: false };
-    },
+    stop: async () => ({ success: false, error: "代打服务仅支持 Electron 桌面模式" }),
+    status: async () => ({ running: false, engineReady: false, currentTask: null, pid: null, startedAt: null }),
+    runTask: async () => ({ success: false, taskId: "daily", message: "代打服务仅支持 Electron 桌面模式", error: "browser mode" }),
+    stopTask: async () => null,
   },
     window: {
       openCapsule: async () => routeTo("capsule"),
@@ -203,7 +204,11 @@ export function installBrowserBridge() {
         saveState(next);
         return next;
       },
-      getSessionLog: async () => [...sessionLog]
+      getSessionLog: async () => [...sessionLog],
+      clearChatMemory: async () => {
+        sessionLog.length = 0;
+        return true;
+      }
     },
     memory: {
       saveSummary: async (summary: string) => {

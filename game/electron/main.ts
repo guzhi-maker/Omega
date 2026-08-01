@@ -4,6 +4,7 @@ import { existsSync, readFileSync } from "node:fs";
 import path from "node:path";
 
 import { exec, execSync } from "node:child_process";
+import { gameBot, type GameBotTaskId } from "./gameBot";
 try {
   const envPath = path.join(__dirname, "..", ".env.local");
   if (existsSync(envPath)) {
@@ -827,27 +828,9 @@ ipcMain.handle("options:generate", async (_event, payload: { omegaText: string }
   return [];
 });
 
-// ---- BetterGI one-click launch IPC ----
-ipcMain.handle("bettergi:launch", async () => {
-  const scriptPath = path.join(__dirname, "..", "scripts", "launch-bettergi.ps1");
-  if (!existsSync(scriptPath)) {
-    return { success: false, error: "launch script not found" };
-  }
-  return new Promise((resolve) => {
-    const cmd = `powershell -ExecutionPolicy Bypass -File "${scriptPath}"`;
-    exec(cmd, { timeout: 15000 }, (error, stdout) => {
-      if (error) { resolve({ success: false, error: error.message }); return; }
-      try {
-        const lastJson = stdout.trim().split("\n").filter(l => l.startsWith("{")).pop();
-        resolve(lastJson ? JSON.parse(lastJson) : { success: true });
-      } catch { resolve({ success: true }); }
-    });
-  });
-});
-
-ipcMain.handle("bettergi:status", async () => {
-  try {
-    const result = execSync('tasklist /FI "IMAGENAME eq BetterGI.exe" /NH 2>nul', { encoding: "utf8", timeout: 5000 });
-    return { running: result.includes("BetterGI.exe") };
-  } catch { return { running: false }; }
-});
+// ---- 代打服务 IPC（前端只感知 Ω 角色，引擎封装在后端）----
+ipcMain.handle("gamebot:start", () => gameBot.start());
+ipcMain.handle("gamebot:stop", () => gameBot.stop());
+ipcMain.handle("gamebot:status", () => gameBot.status());
+ipcMain.handle("gamebot:runTask", (_event, taskId: string) => gameBot.runTask(taskId as GameBotTaskId));
+ipcMain.handle("gamebot:stopTask", () => gameBot.stopTask());

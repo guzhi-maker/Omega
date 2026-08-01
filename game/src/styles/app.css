@@ -29,6 +29,152 @@
   background: rgba(255, 255, 255, 0.3);
   border-radius: 3px;
 }  .crafting-panel__cat-btn {   display: flex;   align-items: center;   gap: 8px;   padding: 8px 10px;   border: 0;   border-radius: 8px;   background: transparent;   color: var(--ac-brown);   font-size: 13px;   font-weight: 700;   cursor: pointer;   text-align: left;   transition: background 0.12s; }  .crafting-panel__cat-btn:hover {   background: rgba(189, 174, 160, 0.15); }  .crafting-panel__cat-btn--active {   background: rgba(25, 200, 185, 0.12);   color: var(--ac-mint-dark); }  .crafting-panel__cat-icon {   font-size: 16px;   width: 22px;   text-align: center; }  /* 閸欏厖鏅堕悧鈺佹惂 */ .crafting-panel__items {   padding: 12px;   overflow-y: auto;   display: grid;   gap: 10px;   align-content: start; }  .crafting-panel__empty {   color: var(--ac-soft-brown);   font-size: 14px;   text-align: center;   padding: 32px 0; }  .crafting-panel__item {   display: flex;   align-items: flex-start;   gap: 12px;   padding: 12px 14px;   border-radius: 12px;   background: rgba(255, 255, 255, 0.5);   border: 1px solid var(--ac-line);   transition: border-color 0.15s; }  .crafting-panel__item:hover {   border-color: var(--ac-mint); }  .crafting-panel__item--done {   opacity: 0.7; }  .crafting-panel__item-info {   flex: 1;   min-width: 0; }  .crafting-panel__item-name {   display: block;   color: var(--ac-brown);   font-size: 14px;   margin-bottom: 3px; }  .crafting-panel__item-effect {   margin: 0 0 2px;   color: var(--ac-mint-dark);   font-size: 12px;   font-weight: 700; }  .crafting-panel__item-flavor {   margin: 0;   color: var(--ac-soft-brown);   font-size: 12px;   font-style: italic; }  .crafting-panel__item-meta {   display: flex;   gap: 10px;   margin-top: 6px; }  .crafting-panel__item-cost {   font-size: 11px;   color: var(--ac-yellow);   font-weight: 800; }  .crafting-panel__item-unlock {   font-size: 11px;   color: var(--ac-soft-brown); }  .crafting-panel__item-badge {   font-size: 11px;   padding: 3px 8px;   border-radius: 999px;   background: var(--ac-mint);   color: #fff;   font-weight: 800;   white-space: nowrap; }  .crafting-panel__craft-btn {   padding: 6px 16px;   border: 2px solid var(--ac-mint);   border-radius: 999px;   background: transparent;   color: var(--ac-mint-dark);   font-weight: 800;   font-size: 13px;   cursor: pointer;   white-space: nowrap;   transition: all 0.12s;   margin-top: 4px; }  .crafting-panel__craft-btn:hover:not(:disabled) {   background: var(--ac-mint);   color: #fff; }  .crafting-panel__craft-btn:disabled {   opacity: 0.4;   cursor: not-allowed;   border-color: var(--ac-line);   color: var(--ac-soft-brown); }   /* ---------- 鐟佸懍鎱ㄥΟ鈥崇础闂堛垺婢?---------- */ .decoration-panel {   display: grid;   grid-template-rows: auto 1fr;   height: 100%;   background: rgba(10, 18, 25, 0.95);   color: #c8e6ff; }  .decoration-panel__header {   display: flex;   align-items: center;   gap: 12px;   padding: 14px 20px;   border-bottom: 1px solid rgba(0, 204, 255, 0.15); }  .decoration-panel__header h2 {   margin: 0;   font-size: 17px;   color: #00ccff; }  .decoration-panel__hint {   flex: 1;   font-size: 12px;   color: #6688aa; }  .decoration-panel__exit {   padding: 6px 16px;   border: 1px solid rgba(255, 80, 80, 0.4);   border-radius: 999px;   background: transparent;   color: #ff6666;   font-weight: 700;   font-size: 13px;   cursor: pointer;   transition: background 0.12s; }  .decoration-panel__exit:hover {   background: rgba(255, 80, 80, 0.1); }  .decoration-panel__body {   padding: 12px 20px;   overflow-y: auto;   display: flex;   flex-direction: column;   gap: 6px; }  .decoration-panel__empty {   text-align: center;   color: #6688aa;   padding: 40px 0; }  .decoration-panel__slot {   border: 1px solid rgba(0, 204, 255, 0.12);   border-radius: 10px;   overflow: hidden; }  .decoration-panel__slot-header {   display: flex;   align-items: center;   gap: 10px;   width: 100%;   padding: 10px 14px;   border: 0;   background: rgba(0, 204, 255, 0.04);   color: #c8e6ff;   cursor: pointer;   font-size: 14px;   text-align: left;   transition: background 0.12s; }  .decoration-panel__slot-header:hover {   background: rgba(0, 204, 255, 0.08); }  .decoration-panel__slot-name {   font-weight: 800;   min-width: 80px; }  .decoration-panel__slot-equipped {   flex: 1;   font-size: 13px;   color: #88cc88; }  .decoration-panel__slot-empty {   flex: 1;   font-size: 13px;   color: #556677; }  .decoration-panel__slot-arrow {   color: #556677;   font-size: 11px; }  .decoration-panel__slot-items {   display: grid;   gap: 4px;   padding: 6px 14px 10px; }  .decoration-panel__item {   display: flex;   align-items: center;   justify-content: space-between;   gap: 10px;   padding: 8px 12px;   border-radius: 8px;   background: rgba(255, 255, 255, 0.03);   transition: background 0.12s; }  .decoration-panel__item:hover {   background: rgba(255, 255, 255, 0.06); }  .decoration-panel__item--active {   background: rgba(0, 204, 255, 0.08);   border: 1px solid rgba(0, 204, 255, 0.2); }  .decoration-panel__item-info strong {   display: block;   font-size: 14px;   color: #c8e6ff; }  .decoration-panel__item-info p {   margin: 2px 0 0;   font-size: 12px;   color: #6688aa; }  .decoration-panel__equip-btn {   padding: 4px 12px;   border: 1px solid #00ccff;   border-radius: 999px;   background: transparent;   color: #00ccff;   font-weight: 700;   font-size: 12px;   cursor: pointer;   white-space: nowrap;   transition: all 0.12s; }  .decoration-panel__equip-btn:hover {   background: #00ccff;   color: #0a1219; }  .decoration-panel__unequip-btn {   padding: 4px 12px;   border: 1px solid rgba(255, 80, 80, 0.4);   border-radius: 999px;   background: transparent;   color: #ff6666;   font-weight: 700;   font-size: 12px;   cursor: pointer;   white-space: nowrap;   transition: all 0.12s; }  .decoration-panel__unequip-btn:hover {   background: rgba(255, 80, 80, 0.1); }   /* ---------- 濞撳憡鍨欓棃銏℃緲 ---------- */ .game-panel {   display: grid;   gap: 14px; }  .game-panel__desc {   color: var(--ac-brown);   line-height: 1.6;   margin: 0; }  .game-panel__actions {   display: flex;   gap: 10px; }  .game-panel__btn {   flex: 1;   padding: 10px 14px;   border: 2px solid var(--ac-mint);   border-radius: 12px;   background: rgba(25, 200, 185, 0.06);   color: var(--ac-mint-dark);   font-weight: 800;   font-size: 14px;   cursor: pointer;   transition: all 0.15s; }  .game-panel__btn:hover {   background: var(--ac-mint);   color: #fff; }  .game-panel__running {   text-align: center;   padding: 16px 0; }  .game-panel__running p {   margin: 0 0 12px;   color: var(--ac-mint-dark);   font-weight: 700; }  .game-panel__spinner {   width: 32px;   height: 32px;   margin: 0 auto;   border: 3px solid var(--ac-line);   border-top-color: var(--ac-mint);   border-radius: 50%;   animation: spin 0.8s linear infinite; }  @keyframes spin {   to { transform: rotate(360deg); } }
+
+/* ---------- Ω 代打工作台 ---------- */
+.game-bot-panel {
+  display: grid;
+  gap: 12px;
+  max-height: min(560px, calc(100vh - 120px));
+}
+.game-bot__omega {
+  display: flex;
+  align-items: center;
+  gap: 10px;
+  padding: 10px 12px;
+  border-radius: 8px;
+  background: rgba(25, 200, 185, 0.07);
+  border: 1px solid rgba(25, 200, 185, 0.25);
+}
+.game-bot__avatar {
+  width: 38px;
+  height: 38px;
+  border-radius: 50%;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  background: var(--ac-mint);
+  color: #fff;
+  font-weight: 900;
+  font-size: 18px;
+  flex-shrink: 0;
+}
+.game-bot__status {
+  display: flex;
+  align-items: center;
+  gap: 7px;
+  color: var(--ac-brown);
+  font-size: 13px;
+  font-weight: 700;
+}
+.game-bot__dot {
+  width: 9px;
+  height: 9px;
+  border-radius: 50%;
+  display: inline-block;
+}
+.game-bot__dot--ready { background: #44cc66; }
+.game-bot__dot--working { background: #ffcc00; animation: pulse 1s infinite; }
+.game-bot__dot--starting { background: #ffcc00; animation: pulse 1s infinite; }
+.game-bot__dot--offline { background: #888; }
+.game-bot__error {
+  margin: 0;
+  color: #ff5555;
+  font-size: 12px;
+  line-height: 1.5;
+}
+.game-bot__tasks {
+  display: grid;
+  grid-template-columns: 1fr 1fr;
+  gap: 8px;
+  overflow-y: auto;
+  max-height: 300px;
+}
+.game-bot__task {
+  display: flex;
+  align-items: center;
+  gap: 8px;
+  padding: 10px 11px;
+  border: 1px solid var(--ac-line);
+  border-radius: 8px;
+  background: rgba(255, 255, 255, 0.45);
+  color: var(--ac-brown);
+  cursor: pointer;
+  text-align: left;
+  transition: border-color 0.15s, background 0.15s;
+  font-family: inherit;
+}
+.game-bot__task:hover {
+  border-color: var(--ac-mint);
+  background: rgba(25, 200, 185, 0.08);
+}
+.game-bot__task-icon {
+  width: 24px;
+  height: 24px;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  border-radius: 6px;
+  background: rgba(25, 200, 185, 0.14);
+  color: var(--ac-mint-dark);
+  font-size: 14px;
+  flex-shrink: 0;
+}
+.game-bot__task-body {
+  display: flex;
+  flex-direction: column;
+  min-width: 0;
+}
+.game-bot__task-body strong {
+  font-size: 13px;
+  color: var(--ac-brown);
+}
+.game-bot__task-body small {
+  font-size: 11px;
+  color: var(--ac-soft-brown);
+  white-space: nowrap;
+  overflow: hidden;
+  text-overflow: ellipsis;
+}
+.game-bot__working {
+  text-align: center;
+  padding: 18px 0;
+  display: grid;
+  gap: 12px;
+  justify-items: center;
+}
+.game-bot__working p {
+  margin: 0;
+  color: var(--ac-mint-dark);
+  font-weight: 700;
+}
+.game-bot__spinner {
+  width: 34px;
+  height: 34px;
+  border: 3px solid var(--ac-line);
+  border-top-color: var(--ac-mint);
+  border-radius: 50%;
+  animation: spin 0.8s linear infinite;
+}
+.game-bot__stop-btn {
+  padding: 7px 16px;
+  border: 1px solid rgba(255, 90, 90, 0.55);
+  border-radius: 999px;
+  background: transparent;
+  color: #e25b5b;
+  font-weight: 700;
+  font-size: 12px;
+  cursor: pointer;
+  transition: background 0.15s;
+}
+.game-bot__stop-btn:hover {
+  background: rgba(255, 90, 90, 0.1);
+}
+.game-bot__footnote {
+  margin: 0;
+  color: var(--ac-soft-brown);
+  font-size: 11px;
+  text-align: center;
+}
 /* ---------- BetterGI 按钮 ---------- */
 .game-panel__bettergi {
   margin-top: 4px;

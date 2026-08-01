@@ -139,11 +139,21 @@ declare global {
       /** vision 思考中提示 */
       onOmegaThinking?: (callback: (msg: string) => void) => () => void;
 
-    /** BetterGI game automation */
-    bettergi: {
-      launch: () => Promise<{ success: boolean; error?: string; pid?: number; exePath?: string }>;
-      status: () => Promise<{ running: boolean }>;
-    };    };
+    /** 代打服务：引擎封装在后端，前端只与 Ω 角色交互 */
+    gamebot: {
+      start: () => Promise<{ success: boolean; error?: string; pid?: number }>;
+      stop: () => Promise<{ success: boolean; error?: string }>;
+      status: () => Promise<{
+        running: boolean;
+        engineReady: boolean;
+        currentTask: string | null;
+        pid: number | null;
+        startedAt: number | null;
+      }>;
+      runTask: (taskId: string) => Promise<{ success: boolean; taskId: string; message: string; error?: string }>;
+      stopTask: () => Promise<{ success: boolean; taskId: string; message: string } | null>;
+    };
+  }
   }
 }
 
