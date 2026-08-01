@@ -4,7 +4,8 @@ import { existsSync, readFileSync } from "node:fs";
 import path from "node:path";
 
 import { exec, execSync } from "node:child_process";
-import { gameBot, type GameBotTaskId } from "./gameBot";
+import type { GameBotTaskId } from "./gameBot";
+const { gameBot } = require("./gameBot.cjs") as typeof import("./gameBot");
 try {
   const envPath = path.join(__dirname, "..", ".env.local");
   if (existsSync(envPath)) {
