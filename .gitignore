@@ -1,0 +1,16 @@
+node_modules/
+dist/
+dist-electron/
+.DS_Store
+*.log
+.env
+.env.local
+*.zip
+playwright-report/
+test-results/
+
+nul
+
+# BetterGI external tool (~1GB)
+game/bettergi/
+

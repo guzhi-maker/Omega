@@ -1,0 +1,78 @@
+﻿*** Begin Patch
+*** Update File: C:\Users\89682\Desktop\game competition\minigame\omega\game\src\components\CapsuleScene.tsx
+
+@@ type Props = {
+   onRoom2Door?: () => void;
+   mood: number;
+   equippedDecorations?: Record<string, string>;
+   capsuleBackgroundDirty?: boolean;
++  deskHighlighted?: boolean;
+ };
+
+@@ export function CapsuleScene({
+   onRoom2Door,
+   mood,
+   equippedDecorations = {},
+   capsuleBackgroundDirty = true,
++  deskHighlighted = false,
+ }: Props) {
+   const hostRef = useRef<HTMLDivElement | null>(null);
+   const appRef = useRef<Application | null>(null);
+   const playerRef = useRef<Container | null>(null);
+   const faceRef = useRef<Graphics | null>(null);
++  const deskGlowRef = useRef<Graphics | null>(null);
+   const positionRef = useRef<Position>({ x: 512, y: 444 });
+@@ doorArrowRef.current = doorArrow;
+       app.stage.addChild(doorArrow);
+
++      // --- Desk highlight glow ---
++      const deskGlow = new Graphics();
++      const dgCx = app.screen.width * 0.5;
++      const dgCy = app.screen.height * 0.56;
++      deskGlow.lineStyle(3, 0x00ccff, 0.6);
++      deskGlow.drawRoundedRect(dgCx - 180, dgCy - 30, 360, 60, 12);
++      deskGlow.lineStyle(0);
++      deskGlow.beginFill(0x00ccff, 0.08);
++      deskGlow.drawRoundedRect(dgCx - 180, dgCy - 30, 360, 60, 12);
++      deskGlow.endFill();
++      deskGlow.alpha = deskHighlighted ? 0.6 : 0;
++      deskGlowRef.current = deskGlow;
++      app.stage.addChild(deskGlow);
++
+       const handleResize = () => {
+         app.renderer.resize(hostElement.clientWidth, hostElement.clientHeight);
+       };
+@@ app.ticker.add((dt: number) => {
+         if (doorArrowRef.current) {
+           doorArrowRef.current.alpha = isNearDoor
+             ? 0.5 + Math.sin(performance.now() / 300) * 0.4
+             : room2Unlocked ? 0.12 : 0;
+         }
++        // Desk highlight pulsing
++        if (deskGlowRef.current) {
++          const highlight = deskGlowRef.current;
++          if (deskHighlighted) {
++            highlight.alpha = 0.3 + 0.4 * Math.sin(performance.now() / 350);
++            highlight.visible = true;
++          } else {
++            highlight.alpha = 0;
++            highlight.visible = false;
++          }
++        }
+       });
+     }
+@@ }, [emotion, prologueDone, lowMood, mood, room2Unlocked, equippedDecorations, capsuleBackgroundDirty]);
++  // Reactive desk highlight updates when prop changes
++  useEffect(() => {
++    if (deskGlowRef.current) {
++      if (deskHighlighted) {
++        deskGlowRef.current.alpha = 0.5;
++        deskGlowRef.current.visible = true;
++      } else {
++        deskGlowRef.current.alpha = 0;
++        deskGlowRef.current.visible = false;
++      }
++    }
++  }, [deskHighlighted]);
+
+*** End Patch
