@@ -71,3 +71,17 @@ npm run test:e2e
 - 合成机、装修、扩建、书架写作周期。
 - 游戏代打能力。
 - 主线 2 以后完整剧情。
+
+## BetterGI (Game Automation)
+
+BetterGI is an external ~1GB tool, so it is not committed to this repo.
+
+First-time setup:
+`powershell
+cd game
+powershell -ExecutionPolicy Bypass .\scripts\setup-bettergi.ps1
+`
+
+The script downloads the latest BetterGI portable release from GitHub and extracts it to game/bettergi/. You can also download it manually from https://github.com/babalae/better-genshin-impact/releases and place BetterGI.exe at game/bettergi/BetterGI/BetterGI.exe.
+
+Launch it from the in-game panel: 事项 -> 游戏 -> 一键启动 BetterGI.

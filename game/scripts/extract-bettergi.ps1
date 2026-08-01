@@ -1,4 +1,4 @@
-<#
+﻿<#
 .SYNOPSIS
   BetterGI 7z 解压辅助脚本
 .DESCRIPTION
