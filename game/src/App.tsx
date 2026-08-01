@@ -37,6 +37,8 @@ const fallbackState: OmegaState = {
   stories: [],
   idleActionStart: Date.now(),
   idleActionDuration: 120_000,
+  genshinDiscussed: false,
+  totalGenshinMs: 0,
 };
 
 export function App() {

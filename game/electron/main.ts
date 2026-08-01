@@ -86,6 +86,8 @@ type OmegaState = {
   completedMilestones: string[];
   lastGreetingTime: number;
   pendingMilestoneEvent: string | null;
+  genshinDiscussed: boolean;
+  totalGenshinMs: number;
   purchasedItems: string[];
   capsuleDecoration: Record<string, string>;
   equippedDecorations: Record<string, string>;
@@ -135,6 +137,8 @@ const defaultState: OmegaState = {
   completedMilestones: [],
   lastGreetingTime: 0,
   pendingMilestoneEvent: null,
+  genshinDiscussed: false,
+  totalGenshinMs: 0,
   purchasedItems: [],
   capsuleDecoration: {},
   equippedDecorations: {},
@@ -687,7 +691,31 @@ app.whenReady().then(async () => {
   } else {
     createCapsuleWindow(true);
   }
+
+  // M6: 原神运行时长累计（每 10 秒一次）
+  const genshinPoll = setInterval(() => {
+    if (!isGenshinRunning()) return;
+    persisted.state.totalGenshinMs = (persisted.state.totalGenshinMs ?? 0) + 10_000;
+    void savePersistedData();
+  }, 10_000);
+  genshinPoll.unref?.();
 });
+
+function isGenshinRunning(): boolean {
+  try {
+    const out = execSync(
+      'tasklist /FI "IMAGENAME eq YuanShen.exe" /NH 2>nul',
+      { encoding: "utf8", timeout: 5000 }
+    );
+    const out2 = execSync(
+      'tasklist /FI "IMAGENAME eq GenshinImpact.exe" /NH 2>nul',
+      { encoding: "utf8", timeout: 5000 }
+    );
+    return out.includes("YuanShen.exe") || out2.includes("GenshinImpact.exe");
+  } catch {
+    return false;
+  }
+}
 
 app.on("window-all-closed", () => {});
 
@@ -781,6 +809,9 @@ ipcMain.handle("memory:getSummaries", () => persisted.memories);
 ipcMain.handle("ai:sendMessage", async (_event, payload: { text: string; includeScreenshot: boolean }) => {
   const createdAt = new Date().toISOString();
   sessionLog.push({ speaker: "player", text: payload.text, createdAt });
+  if (/原神|genshin/i.test(payload.text)) {
+    persisted.state.genshinDiscussed = true;
+  }
   // visionAgent �� �� �� optionsAgent �ϸ�˳��
   let screenContext = "";
   if (payload.includeScreenshot) {

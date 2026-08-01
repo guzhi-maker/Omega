@@ -12,6 +12,7 @@ type Props = {
   updateState: (partial: Partial<OmegaState>) => Promise<OmegaState>;
   onClose: () => void;
   setClickBubble: (msg: string | null) => void;
+  lockReason?: string | null;
 };
 
 type BotStatus = {
@@ -34,7 +35,7 @@ const TASK_LABELS: Record<string, string> = Object.fromEntries(
   TASKS.map((t) => [t.id, t.label])
 );
 
-export default function GamePanel({ state, updateState, onClose, setClickBubble }: Props) {
+export default function GamePanel({ state, updateState, onClose, setClickBubble, lockReason }: Props) {
   const [busyTask, setBusyTask] = useState<string | null>(null);
   const [botStatus, setBotStatus] = useState<BotStatus>({
     running: false,
@@ -156,6 +157,13 @@ export default function GamePanel({ state, updateState, onClose, setClickBubble 
 
       {error && <p className="game-bot__error">{error}</p>}
 
+      {lockReason && (
+        <div className="game-bot__locked">
+          <p>{lockReason}</p>
+          <small>条件满足后，游戏功能就会解锁。</small>
+        </div>
+      )}
+
       {busyTask || starting ? (
         <div className="game-bot__working">
           <div className="game-bot__spinner" />
@@ -185,7 +193,7 @@ export default function GamePanel({ state, updateState, onClose, setClickBubble 
         </div>
       )}
 
-      <p className="game-bot__footnote">好感度 {state.affinity} · Ω 说她可以试试</p>
+      <p className="game-bot__footnote">好感度 {state.affinity} · Ω 还在学着认识这台游戏机</p>
 
       <button type="button" onClick={(e) => { e?.stopPropagation(); onClose(); }}>
         关闭

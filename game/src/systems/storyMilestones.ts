@@ -61,6 +61,38 @@ export function getCleanCapsuleDialogue() {
   return CLEAN_DIALOGUES;
 }
 
+/* ---------- M6 游戏解锁条件（预测案） ---------- */
+
+export const GENSHIN_UNLOCK_MS = 10 * 60 * 1000;
+
+export function hasCraftedGameConsole(state: OmegaState): boolean {
+  return (state.purchasedItems ?? []).includes("game_console");
+}
+
+/** 四项条件全部满足时 M6 才成立 */
+export function isGameUnlockReady(state: OmegaState): boolean {
+  return (
+    hasCraftedGameConsole(state) &&
+    (state.affinity ?? 0) >= 50 &&
+    (state.totalGenshinMs ?? 0) >= GENSHIN_UNLOCK_MS &&
+    Boolean(state.genshinDiscussed)
+  );
+}
+
+/** 未满足时返回给玩家的可读条件提示，满足时返回 null */
+export function getGameUnlockReason(state: OmegaState): string | null {
+  if (isGameUnlockReady(state)) return null;
+  const missing: string[] = [];
+  if (!hasCraftedGameConsole(state)) missing.push("先在合成机里造一台游戏机");
+  if ((state.affinity ?? 0) < 50) missing.push("好感度需要达到 50");
+  if ((state.totalGenshinMs ?? 0) < GENSHIN_UNLOCK_MS) {
+    const minutes = Math.floor((state.totalGenshinMs ?? 0) / 60000);
+    missing.push(`原神还需再运行 ${10 - minutes} 分钟`);
+  }
+  if (!state.genshinDiscussed) missing.push("和 Ω 聊聊原神");
+  return missing.join("；");
+}
+
 /* ---------- 里程碑检查 ---------- */
 
 export type MilestoneCheck = {
@@ -114,6 +146,13 @@ export function checkMilestones(state: OmegaState): MilestoneCheck {
     };
   }
 
+  if (!completed.has("m6_game_unlock") && isGameUnlockReady(state)) {
+    return {
+      triggered: "m6_game_unlock",
+      bubbleText: "这台游戏机……我想我已经准备好了。",
+    };
+  }
+
   if (!completed.has("m7_writing") && mood > 500 && affinity > 50) {
     return {
       triggered: "m7_writing",
@@ -164,6 +203,14 @@ export function applyMilestoneReward(
     case "m5_construction":
       partial.mood = Math.min(1000, (currentState.mood ?? 0) + 10);
       partial.emotion = "proud";
+      break;
+    case "m6_game_unlock":
+      partial.mood = Math.min(1000, (currentState.mood ?? 0) + 10);
+      partial.emotion = "happy";
+      partial.unlocked = {
+        ...(currentState.unlocked ?? {}),
+        game: true,
+      };
       break;
     case "m7_writing":
       partial.mood = Math.min(1000, (currentState.mood ?? 0) + 20);

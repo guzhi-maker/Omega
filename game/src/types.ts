@@ -99,6 +99,10 @@ export type OmegaState = {
   lastGreetingTime: number;
   /** 待处理的里程碑事件 */
   pendingMilestoneEvent: string | null;
+  /** M6：是否与 Ω 聊到过原神 */
+  genshinDiscussed: boolean;
+  /** M6：Ω 在线期间原神累计运行时长 ms */
+  totalGenshinMs: number;
 };
 
 export type PersistedData = {
@@ -158,4 +162,3 @@ declare global {
 }
 
 export {};
-

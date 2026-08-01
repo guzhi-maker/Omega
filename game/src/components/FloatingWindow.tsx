@@ -15,6 +15,8 @@ import {
   applyMilestoneReward,
   pickPeriodicTopic,
   ALL_MILESTONES,
+  isGameUnlockReady,
+  getGameUnlockReason,
 } from "../systems/storyMilestones";
 import { generateOptions } from "../systems/optionAgent";
 import type { AgentOption } from "../systems/optionAgent";
@@ -295,7 +297,7 @@ export function FloatingWindow({ state, setState, updateState }: Props) {
     if (result.triggered && !stateRef.current.pendingMilestoneEvent) {
       updateState({ pendingMilestoneEvent: result.bubbleText }).catch(() => {});
     }
-  }, [state.mood, state.affinity, state.unlocked, updateState]);
+  }, [state.mood, state.affinity, state.unlocked, state.totalGenshinMs, updateState]);
 
   // ---------- 定期话题（每1小时） ----------
   useEffect(() => {
@@ -447,16 +449,9 @@ export function FloatingWindow({ state, setState, updateState }: Props) {
     await window.omega.window.openCapsule();
   }
 
-  // ---------- 游戏锁定文案 ----------
-  function lockedGameText() {
-    const options = [
-      "Ω暂时还没有办法帮你打游戏",
-      "Ω不太想帮你打游戏",
-      "Ω还没有学会这款游戏",
-      "Ω还不知道这是什么游戏",
-    ];
-    return options[Math.floor(Math.random() * options.length)];
-  }
+  // ---------- 游戏解锁条件（M6） ----------
+  const gameUnlockReady = isGameUnlockReady(state);
+  const gameUnlockReason = getGameUnlockReason(state);
 
   // ---------- 点击头像 ----------
   function handleAvatarClick(e?: React.MouseEvent) {
@@ -773,6 +768,9 @@ export function FloatingWindow({ state, setState, updateState }: Props) {
               e?.stopPropagation();
               if (moodLocked) {
                 lowMoodBlock("game");
+              } else if (!gameUnlockReady && gameUnlockReason) {
+                setClickBubble(gameUnlockReason);
+                setTimeout(() => setClickBubble(null), 4000);
               } else {
                 openPanel("game");
               }
@@ -890,6 +888,7 @@ export function FloatingWindow({ state, setState, updateState }: Props) {
           updateState={updateState}
           onClose={() => { closePanel(); }}
           setClickBubble={setClickBubble}
+          lockReason={gameUnlockReason}
         />
       )}
       {panel === "crafting" && (
@@ -1177,6 +1176,8 @@ function DevPanel({
                   stories: [],
                   idleActionStart: Date.now(),
                   idleActionDuration: 120_000,
+                  genshinDiscussed: false,
+                  totalGenshinMs: 0,
                 };
 
                 await updateState(defaults);

@@ -181,7 +181,7 @@ export const ALL_RECIPES: CraftRecipe[] = [
     flavor: "制造之后就可以打游戏了。",
     unlockCondition: "无",
     isUnlocked: () => true,
-    apply: (s) => ({ unlocked: { ...s.unlocked, game: true } }),
+    apply: () => ({}),
   },
   {
     id: "planting_tools",

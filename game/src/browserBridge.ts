@@ -33,6 +33,8 @@ const defaultState: OmegaState = {
   completedMilestones: [],
   lastGreetingTime: 0,
   pendingMilestoneEvent: null,
+  genshinDiscussed: false,
+  totalGenshinMs: 0,
 };
 
 const stateKey = "omega.browser.state";
@@ -107,7 +109,8 @@ function inferReply(text: string, state: OmegaState): OmegaAIResponse {
     unlocked: {
       ...state.unlocked,
       activeGreeting: state.unlocked.activeGreeting || state.mood + moodDelta > 50
-    }
+    },
+    genshinDiscussed: state.genshinDiscussed || /原神|genshin/i.test(text)
   };
   const reply =
     featureIntent === "capsule"
