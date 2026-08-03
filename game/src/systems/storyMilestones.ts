@@ -205,8 +205,6 @@ export function applyMilestoneReward(
       partial.emotion = "proud";
       break;
     case "m6_game_unlock":
-      partial.mood = Math.min(1000, (currentState.mood ?? 0) + 10);
-      partial.emotion = "happy";
       partial.unlocked = {
         ...(currentState.unlocked ?? {}),
         game: true,

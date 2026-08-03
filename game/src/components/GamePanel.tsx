@@ -45,6 +45,9 @@ export default function GamePanel({ state, updateState, onClose, setClickBubble,
   const [error, setError] = useState<string | null>(null);
   const [starting, setStarting] = useState(false);
   const pollRef = useRef<ReturnType<typeof setInterval> | null>(null);
+  const busyRef = useRef(false);
+  const updateStateRef = useRef(updateState);
+  updateStateRef.current = updateState;
 
   const refreshStatus = useCallback(async () => {
     if (!window.omega?.gamebot) return;
@@ -55,8 +58,17 @@ export default function GamePanel({ state, updateState, onClose, setClickBubble,
         engineReady: s.engineReady,
         currentTask: s.currentTask,
       });
-      if (s.currentTask) setBusyTask(s.currentTask);
-      else setBusyTask((prev) => prev && !s.running ? prev : null);
+      if (s.currentTask) {
+        busyRef.current = true;
+        setBusyTask(s.currentTask);
+      } else {
+        const justFinished = busyRef.current;
+        busyRef.current = false;
+        setBusyTask(null);
+        if (justFinished) {
+          await updateStateRef.current({ emotion: "happy", lastActiveTime: Date.now() });
+        }
+      }
     } catch {
       /* 忽略状态轮询错误 */
     }
@@ -109,6 +121,7 @@ export default function GamePanel({ state, updateState, onClose, setClickBubble,
       const r = await window.omega.gamebot.runTask(taskId);
       if (r.success) {
         setBusyTask(taskId);
+        busyRef.current = true;
         speak(`好，${TASK_LABELS[taskId]}交给我。你歇一会儿。`);
         await updateState({ emotion: "proud", lastActiveTime: Date.now() });
       } else {
@@ -126,6 +139,7 @@ export default function GamePanel({ state, updateState, onClose, setClickBubble,
       const r = await window.omega.gamebot.stopTask();
       if (r) {
         setBusyTask(null);
+        busyRef.current = false;
         speak(r.message);
       }
     } catch {

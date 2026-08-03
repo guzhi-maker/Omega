@@ -297,7 +297,7 @@ export function FloatingWindow({ state, setState, updateState }: Props) {
     if (result.triggered && !stateRef.current.pendingMilestoneEvent) {
       updateState({ pendingMilestoneEvent: result.bubbleText }).catch(() => {});
     }
-  }, [state.mood, state.affinity, state.unlocked, state.totalGenshinMs, updateState]);
+  }, [state.mood, state.affinity, state.unlocked, state.totalGenshinMs, state.genshinDiscussed, updateState]);
 
   // ---------- 定期话题（每1小时） ----------
   useEffect(() => {
