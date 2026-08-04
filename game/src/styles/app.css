@@ -169,6 +169,27 @@
 .game-bot__stop-btn:hover {
   background: rgba(255, 90, 90, 0.1);
 }
+.game-bot__panel-actions {
+  display: flex;
+  gap: 8px;
+}
+.game-bot__panel-actions button {
+  flex: 1;
+}
+.game-bot__kill-btn {
+  padding: 8px 12px;
+  border: 1px solid rgba(255, 70, 70, 0.65);
+  border-radius: 8px;
+  background: rgba(255, 70, 70, 0.08);
+  color: #d94b4b;
+  font-weight: 700;
+  font-size: 13px;
+  cursor: pointer;
+  transition: background 0.15s;
+}
+.game-bot__kill-btn:hover {
+  background: rgba(255, 70, 70, 0.16);
+}
 .game-bot__footnote {
   margin: 0;
   color: var(--ac-soft-brown);

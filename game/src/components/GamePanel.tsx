@@ -127,6 +127,25 @@ export default function GamePanel({ state, updateState, onClose, setClickBubble 
     }
   }, [speak]);
 
+  const handleForceStop = useCallback(async () => {
+    if (!window.omega?.gamebot) return;
+    setError(null);
+    try {
+      const r = await window.omega.gamebot.stop();
+      setBusyTask(null);
+      busyRef.current = false;
+      if (r?.success) {
+        speak("代理已强制停止");
+      } else {
+        const message = r?.error || "代理停止失败";
+        setError(message);
+        speak(message);
+      }
+    } catch (err) {
+      setError(String(err));
+    }
+  }, [speak]);
+
   const statusText = busyTask
     ? `正在处理${TASK_LABELS[busyTask] ?? busyTask}`
     : starting
@@ -194,9 +213,18 @@ export default function GamePanel({ state, updateState, onClose, setClickBubble 
 
       <p className="game-bot__footnote">好感度 {state.affinity} · Ω 会看好这台游戏机</p>
 
-      <button type="button" onClick={(e) => { e?.stopPropagation(); onClose(); }}>
-        关闭
-      </button>
+      <div className="game-bot__panel-actions">
+        <button
+          type="button"
+          className="game-bot__kill-btn"
+          onClick={(e) => { e?.stopPropagation(); handleForceStop(); }}
+        >
+          强制停止代理
+        </button>
+        <button type="button" onClick={(e) => { e?.stopPropagation(); onClose(); }}>
+          关闭
+        </button>
+      </div>
     </section>
   );
 }
