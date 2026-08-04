@@ -466,6 +466,9 @@ class GameBotService {
         displayRecognitionResultsOnMask: false,
         directionsEnabled: false,
       },
+      otherConfig: {
+        restoreFocusOnLostEnabled: true,
+      },
       hotKeyConfig: hotkeyPatch,
       genshinStartConfig: {
         linkedStartEnabled: true,
@@ -515,6 +518,9 @@ class GameBotService {
     const script = this.scriptPath("launch-bettergi.ps1");
     if (!existsSync(script)) {
       return Promise.resolve({ success: false, error: "engine launch script not found" });
+    }
+    if (this.isEngineRunning()) {
+      return Promise.resolve({ success: false, error: "BetterGI is already running; stop it before relaunching" });
     }
     const argLine = args.map((arg) => `"${arg.replace(/"/g, '\\"')}"`).join(" ");
     return new Promise((resolve) => {
@@ -642,13 +648,21 @@ class GameBotService {
 
   private stopEngineInternal(): { success: boolean; error?: string } {
     try {
-      execSync(`taskkill /IM ${ENGINE_IMAGE} /F 2>nul`, { timeout: 8000, windowsHide: true });
+      execSync(`taskkill /IM ${ENGINE_IMAGE} /F /T 2>nul`, { timeout: 8000, windowsHide: true });
+    } catch {
+      // Access denied means Omega lacks admin rights; verification below reports it.
+    }
+    try {
+      execSync(`powershell -NoProfile -Command "Start-Sleep -Milliseconds 800"`, { timeout: 5000, windowsHide: true });
+    } catch {
+      // Ignore sleep failure; the process check below is authoritative.
+    }
+    if (!this.isEngineRunning()) {
       this.pid = null;
       this.startedAt = null;
       return { success: true };
-    } catch {
-      return { success: false, error: "engine stop failed" };
     }
+    return { success: false, error: "Failed to stop BetterGI. Run Omega as administrator and retry." };
   }
 
   async start(): Promise<{ success: boolean; error?: string; pid?: number }> {
@@ -736,7 +750,11 @@ class GameBotService {
 
     if (meta.mode === "onedragon") {
       if (this.isEngineRunning()) {
-        this.stopEngineInternal();
+        const stopped = this.stopEngineInternal();
+        if (!stopped.success) {
+          this.currentTask = null;
+          return { success: false, taskId, message: stopped.error || "engine stop failed", error: "engine stop failed" };
+        }
       }
       await this.sleep(800);
       const launch = await this.launchEngine(["startOneDragon", meta.oneDragonConfig as string]);
@@ -773,6 +791,18 @@ class GameBotService {
       this.startedAt = Date.now();
     }
 
+    // BetterGI keyboard hooks ignore hotkeys unless the game window is focused.
+    this.focusGame();
+
+    if (taskId === "auto_pick" || taskId === "auto_skip") {
+      const section = taskId === "auto_pick" ? "autoPickConfig" : "autoSkipConfig";
+      const cfg = this.readEngineConfig();
+      const enabled = (cfg?.[section] as Record<string, unknown> | undefined)?.enabled === true;
+      if (enabled) {
+        return { success: true, taskId, message: `Ω ${meta.label} is already running` };
+      }
+    }
+
     // 等待截图器和快捷键注册完成后，再注入触发键。
     await new Promise((resolve) => setTimeout(resolve, 2500));
     const sent = this.sendHotkey(meta.hotkey as keyof typeof HOTKEYS);
@@ -788,6 +818,7 @@ class GameBotService {
     const taskId = this.currentTask;
     const meta = TASK_META[taskId];
 
+    this.focusGame();
     if (meta?.mode === "onedragon") {
       this.sendHotkey("onedragonHotkey");
     } else if (meta?.hotkey) {

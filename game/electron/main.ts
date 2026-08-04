@@ -1,4 +1,4 @@
-﻿import { app, BrowserWindow, desktopCapturer, ipcMain, Menu, nativeImage, Tray } from "electron";
+﻿import { app, BrowserWindow, desktopCapturer, ipcMain, Menu, nativeImage, screen, Tray } from "electron";
 import { readFile, writeFile } from "node:fs/promises";
 import { existsSync, readFileSync } from "node:fs";
 import path from "node:path";
@@ -128,6 +128,7 @@ type PersistedData = {
   memories: string[];
 };
 
+loadLocalEnv();
 const isDev = Boolean(process.env.VITE_DEV_SERVER_URL);
 const rendererUrl = process.env.VITE_DEV_SERVER_URL ?? "";
 const stateFile = () => path.join(app.getPath("userData"), "omega-state.json");
@@ -307,11 +308,19 @@ function createFloatingWindow() {
     return floatingWindow;
   }
 
+  const saved = persisted.state.floatingPosition;
+  const workArea = screen.getPrimaryDisplay().workArea;
+  const width = 420;
+  const height = 620;
+  const defaultX = Math.max(workArea.x, workArea.x + Math.round((workArea.width - width) / 2));
+  const defaultY = Math.max(workArea.y, workArea.y + 16);
+  const x = Math.min(Math.max(saved?.x ?? defaultX, workArea.x), workArea.x + Math.max(0, workArea.width - width));
+  const y = Math.min(Math.max(saved?.y ?? defaultY, workArea.y), workArea.y + Math.max(0, workArea.height - height));
   floatingWindow = new BrowserWindow({
     width: 420,
     height: 620,
-    x: persisted.state.floatingPosition?.x,
-    y: persisted.state.floatingPosition?.y,
+    x,
+    y,
     title: "Ω Desktop Pet",
     transparent: true,
     frame: false,
@@ -709,7 +718,6 @@ Omega: ��Ϊ�����ܿ����ܶ����ǡ�������
     return null;
   }
 }
-loadLocalEnv();
 
 app.whenReady().then(async () => {
   persisted = await loadPersistedData();
