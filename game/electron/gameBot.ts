@@ -574,6 +574,41 @@ class GameBotService {
     return false;
   }
 
+  private hideEngineWindow(): void {
+    const script = this.scriptPath("hide-bettergi.ps1");
+    if (!existsSync(script)) return;
+    try {
+      exec(
+        `powershell -NoProfile -ExecutionPolicy Bypass -Command "Start-Process powershell -ArgumentList '-NoProfile','-ExecutionPolicy','Bypass','-File','${script}' -WindowStyle Hidden"`,
+        { timeout: 8000, windowsHide: true }
+      );
+    } catch {
+      // 隐藏失败不影响代打，游戏窗口聚焦后会继续执行
+    }
+  }
+
+  private focusGame(): { success: boolean; error?: string } {
+    const script = this.scriptPath("focus-game.ps1");
+    if (!existsSync(script)) {
+      return { success: false, error: "focus script not found" };
+    }
+    try {
+      const out = execSync(
+        `powershell -NoProfile -ExecutionPolicy Bypass -File "${script}"`,
+        { encoding: "utf8", timeout: 8000, windowsHide: true }
+      );
+      const line = out
+        .trim()
+        .split("\n")
+        .filter((l) => l.startsWith("{"))
+        .pop();
+      const parsed = line ? JSON.parse(line) : null;
+      return parsed?.success ? { success: true } : { success: false, error: parsed?.error || "focus failed" };
+    } catch (err) {
+      return { success: false, error: String(err) };
+    }
+  }
+
   private sendHotkey(hotkeyName: keyof typeof HOTKEYS): { success: boolean; error?: string } {
     const script = this.scriptPath("send-hotkey.ps1");
     if (!existsSync(script)) {
@@ -626,6 +661,8 @@ class GameBotService {
 
     const launch = await this.launchEngine(["start"]);
     if (!launch.success) return launch;
+    this.hideEngineWindow();
+    this.focusGame();
 
     const ready = await this.waitForEngine(ENGINE_START_TIMEOUT_MS);
     if (!ready) {
@@ -695,6 +732,8 @@ class GameBotService {
       }
       await this.sleep(800);
       const launch = await this.launchEngine(["startOneDragon", meta.oneDragonConfig as string]);
+      this.hideEngineWindow();
+      this.focusGame();
       if (!launch.success) {
         this.currentTask = null;
         return { success: false, taskId, message: launch.error || "代打助手启动失败", error: launch.error };
@@ -711,6 +750,8 @@ class GameBotService {
 
     if (!this.isEngineRunning()) {
       const launch = await this.launchEngine(["start"]);
+      this.hideEngineWindow();
+      this.focusGame();
       if (!launch.success) {
         this.currentTask = null;
         return { success: false, taskId, message: launch.error || "代打助手启动失败", error: launch.error };
