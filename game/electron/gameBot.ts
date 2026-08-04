@@ -19,6 +19,7 @@ export type GameBotTaskId =
   | "fishing"
   | "wood"
   | "auto_pick"
+  | "simple"
   | "auto_skip";
 
 export interface GameBotStatus {
@@ -80,6 +81,11 @@ const TASK_META: Record<GameBotTaskId, TaskMeta> = {
     label: "剧情跳过",
     mode: "hotkey",
     hotkey: "autoSkipEnabledHotkey",
+  },
+  simple: {
+    label: "简单任务",
+    mode: "onedragon",
+    oneDragonConfig: "omega_simple",
   },
 };
 
@@ -486,13 +492,15 @@ class GameBotService {
 
     try {
       const oneDragonDir = path.join(userDir, "OneDragon");
-      for (const configName of ["omega_full", "omega_resin", "omega_domain"]) {
+      for (const configName of ["omega_full", "omega_resin", "omega_domain", "omega_simple"]) {
         const enabledTasks =
           configName === "omega_resin"
             ? ["合成树脂"]
             : configName === "omega_domain"
               ? ["自动秘境"]
-              : [...ONE_DRAGON_TASKS];
+              : configName === "omega_simple"
+                ? ["领取邮件", "领取每日奖励", "领取尘歌壶奖励"]
+                : [...ONE_DRAGON_TASKS];
         const payload = buildOneDragonConfig(configName, enabledTasks);
         writeFileSync(path.join(oneDragonDir, `${configName}.json`), JSON.stringify(payload, null, 2), "utf8");
       }
