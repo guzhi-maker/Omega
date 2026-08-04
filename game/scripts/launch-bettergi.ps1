@@ -10,7 +10,7 @@ param(
   [Parameter(Mandatory = $false)]
   [string]$BetterGIPath = "",
 
-  [Parameter(Mandatory = $false)]
+  [Parameter(Mandatory = $false, ValueFromRemainingArguments = $true)]
   [string[]]$Arguments = @(),
 
   [Parameter(Mandatory = $false)]

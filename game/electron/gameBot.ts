@@ -96,6 +96,7 @@ const HOTKEYS = {
 const ENGINE_IMAGE = "BetterGI.exe";
 const ENGINE_START_TIMEOUT_MS = 60_000;
 const SETUP_TIMEOUT_MS = 30 * 60 * 1000;
+const GENSHIN_START_ARGS = "-popupwindow -screen-width 1920 -screen-height 1080";
 
 const ONE_DRAGON_TASKS = [
   "领取邮件",
@@ -196,6 +197,26 @@ function queryRegString(key: string, value: string): string | null {
   }
 }
 
+function ensureWindowedResolution(): void {
+  if (isGameRunning()) return;
+  const key = 'HKEY_CURRENT_USER\\Software\\miHoYo\\原神';
+  const values = [
+    ['Screenmanager Resolution Width_h182942802', '1920'],
+    ['Screenmanager Resolution Height_h2627697771', '1080'],
+    ['Screenmanager Is Fullscreen mode_h3981298716', '0'],
+  ];
+  for (const [name, value] of values) {
+    try {
+      execSync(`reg add "${key}" /v ${name} /t REG_DWORD /d ${value} /f`, {
+        encoding: 'utf8',
+        timeout: 4000,
+        windowsHide: true,
+      });
+    } catch {
+      // 注册表写入失败不阻塞启动，BetterGI 仍可尝试用启动参数拉起窗口化游戏
+    }
+  }
+}
 function findGameInstallPath(): string {
   const registryKeys = [
     "HKEY_CURRENT_USER\\Software\\miHoYo\\HYP\\1_1\\hk4e_cn",
@@ -420,7 +441,10 @@ class GameBotService {
       findGameInstallPath() ||
       (typeof genshinStartConfig?.installPath === "string" ? genshinStartConfig.installPath : "");
 
+    ensureWindowedResolution();
+
     const patch = {
+      captureMode: "WindowsGraphicsCapture",
       commonConfig: {
         isFirstRun: false,
         runForVersion: "0.62.0",
@@ -441,8 +465,8 @@ class GameBotService {
         linkedStartEnabled: true,
         autoEnterGameEnabled: true,
         installPath,
-        genshinStartArgs: "",
-        startGameWithCmd: false,
+        genshinStartArgs: GENSHIN_START_ARGS,
+        startGameWithCmd: true,
         recordGameTimeEnabled: false,
         autoDisableGenshinHdrEnabled: false,
       },
@@ -487,7 +511,7 @@ class GameBotService {
     const argLine = args.map((arg) => `"${arg.replace(/"/g, '\\"')}"`).join(" ");
     return new Promise((resolve) => {
       exec(
-        `powershell -NoProfile -ExecutionPolicy Bypass -File "${script}" -Silent -Arguments ${argLine}`,
+        `powershell -NoProfile -ExecutionPolicy Bypass -File "${script}" -BetterGIPath "" -Silent ${argLine}`,
         { timeout: 30_000, windowsHide: true, maxBuffer: 1024 * 1024 },
         (error, stdout) => {
           if (error && !this.isEngineRunning()) {
