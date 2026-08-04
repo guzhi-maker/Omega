@@ -1,4 +1,4 @@
-﻿* {   box-sizing: border-box; }  :root {   --ac-cream: #f8f4e8;   --ac-paper: #fffaf0;   --ac-mint: #19c8b9;   --ac-mint-dark: #129487;   --ac-grass: #8ac68a;   --ac-yellow: #f5c31c;   --ac-peach: #f3a883;   --ac-brown: #725c4e;   --ac-soft-brown: #bdaea0;   --ac-line: #dfd4be;   --ac-shadow: rgba(93, 64, 55, 0.18); }  html, body, #root {   width: 100%;   height: 100%;   margin: 0;   overflow: hidden;   font-family: Nunito, "Noto Sans SC", "HarmonyOS Sans SC", "MiSans", "PingFang SC", "Microsoft YaHei", system-ui, sans-serif;   color: var(--ac-brown);   letter-spacing: 0; }  body {   background: transparent; }  button, input {   font: inherit; }  button {   cursor: pointer; }  button:focus-visible, input:focus-visible {   outline: 3px solid rgba(245, 195, 28, 0.88);   outline-offset: 2px; }  .loading-screen {   display: grid;   min-height: 100vh;   place-items: center;   background:     radial-gradient(circle at 50% 42%, rgba(255, 250, 240, 0.88), transparent 32%),     linear-gradient(180deg, #9fdac5, #f8e6b7);   color: var(--ac-brown);   font-weight: 800; }  /* ---------- 闁诡噮鍓氱拠鐐电玻?---------- */ .floating-shell {   position: relative;   width: 100vw;   height: 100vh;   background: transparent;   pointer-events: none;   user-select: none; }  .floating-shell::before {   display: none; }  .floating-shell button, .floating-shell input, .floating-panel, .dialogue-bubble, .bubble-menu {   -webkit-app-region: no-drag;   pointer-events: auto; }  /* ---------- Mood meter ---------- */ .omega-avatar {   position: absolute;   left: 50%;   bottom: 0;   width: 420px;   height: 620px;   border: 0;   background: transparent;   pointer-events: auto;   filter: drop-shadow(0 24px 22px rgba(93, 64, 55, 0.22));   transform: translateX(-50%);   transition: transform 0.24s ease, filter 0.24s ease; }  .omega-avatar:hover {   transform: translateX(-50%) translateY(-5px) rotate(-1deg); }  .omega-avatar img {   display: block;   width: 100%;   height: 100%;   object-fit: contain;   pointer-events: none; }  .omega-avatar--happy, .omega-avatar--proud {   filter: drop-shadow(0 24px 22px rgba(93, 64, 55, 0.22)) drop-shadow(0 0 14px rgba(245, 195, 28, 0.5)); }  .omega-avatar--sad, .omega-avatar--calm_negative {   filter: drop-shadow(0 24px 22px rgba(93, 64, 55, 0.22)) saturate(0.82) brightness(0.92); }  .omega-avatar--shy {   filter: drop-shadow(0 24px 22px rgba(93, 64, 55, 0.22)) drop-shadow(0 0 14px rgba(248, 166, 178, 0.42)); }  /* ---------- Status bar ---------- */ .bubble-menu {   position: absolute;   right: 34px;   top: 112px;   display: grid;   gap: 12px; }  .bubble-menu button, .chat-form button, .floating-panel button, .dialogue-bubble button, .prologue-screen button, .capsule-topbar button, .desk-action {   min-height: 42px;   border: 1px solid rgba(255, 255, 255, 0.72);   border-radius: 999px;   background: rgba(255, 250, 240, 0.76);   backdrop-filter: blur(12px);   color: var(--ac-brown);   padding: 10px 18px;   box-shadow: 0 12px 24px rgba(93, 64, 55, 0.13);   font-weight: 900;   transition: transform 0.18s ease, box-shadow 0.18s ease, background 0.18s ease; }  .bubble-menu button:nth-child(2n) {   background: rgba(232, 247, 239, 0.76); }  .bubble-menu button:hover, .chat-form button:hover, .floating-panel button:hover, .dialogue-bubble button:hover, .prologue-screen button:hover, .capsule-topbar button:hover, .desk-action:hover {   background: #fff6c8;   transform: translateY(-2px);   box-shadow: 0 16px 26px rgba(93, 64, 55, 0.16); }  .bubble-menu button:active, .chat-form button:active, .floating-panel button:active, .dialogue-bubble button:active, .prologue-screen button:active, .capsule-topbar button:active, .desk-action:active {   transform: translateY(2px);   box-shadow: 0 8px 14px rgba(93, 64, 55, 0.1); }  .bubble-menu .is-locked {   color: #a99c83;   background: #ece5d6; }  /* ---------- 闂侇偅姘ㄩ弫銈夋閵忊剝绶?---------- */ .floating-panel {   position: absolute;   right: 24px;   bottom: 82px;   width: min(520px, calc(100vw - 48px));   padding: 16px;   border: 1px solid rgba(255, 255, 255, 0.58);   border-radius: 18px;   background: rgba(255, 250, 240, 0.68);   backdrop-filter: blur(18px);   box-shadow: 0 20px 42px rgba(33, 28, 24, 0.16); }  /* 闁告瑯鍨辩€氬宕濋妸顭戝敹鐟滅増娲熷浼村级?*/ .record-panel {   position: fixed;   top: 82px;   bottom: 82px;   width: min(480px, calc(100vw - 48px));   cursor: move; }  .record-panel header {   display: flex;   align-items: center;   justify-content: space-between; }  .record-panel h2, .compact-panel h2 {   margin: 0;   color: var(--ac-brown);   font-size: 16px; }  .record-list {   height: calc(100% - 48px);   overflow: auto;   padding-right: 4px; }  .record-list p, .compact-panel p, .empty-copy {   color: #806851;   line-height: 1.55; }  /* ---------- 閻庣數顢婇惁钘夘潩閺冣偓閸︽椽鏁嶉崼锝勫枈濠㈠灈鏅犲浼村级閸栵紕绀?---------- */ .dialogue-bubble {   position: relative;   width: auto;   min-width: 220px;   max-width: min(330px, calc(50vw - 42px));   gap: 10px;   transform: translateX(-4px); }
+* {   box-sizing: border-box; }  :root {   --ac-cream: #f8f4e8;   --ac-paper: #fffaf0;   --ac-mint: #19c8b9;   --ac-mint-dark: #129487;   --ac-grass: #8ac68a;   --ac-yellow: #f5c31c;   --ac-peach: #f3a883;   --ac-brown: #725c4e;   --ac-soft-brown: #bdaea0;   --ac-line: #dfd4be;   --ac-shadow: rgba(93, 64, 55, 0.18); }  html, body, #root {   width: 100%;   height: 100%;   margin: 0;   overflow: hidden;   font-family: Nunito, "Noto Sans SC", "HarmonyOS Sans SC", "MiSans", "PingFang SC", "Microsoft YaHei", system-ui, sans-serif;   color: var(--ac-brown);   letter-spacing: 0; }  body {   background: transparent; }  button, input {   font: inherit; }  button {   cursor: pointer; }  button:focus-visible, input:focus-visible {   outline: 3px solid rgba(245, 195, 28, 0.88);   outline-offset: 2px; }  .loading-screen {   display: grid;   min-height: 100vh;   place-items: center;   background:     radial-gradient(circle at 50% 42%, rgba(255, 250, 240, 0.88), transparent 32%),     linear-gradient(180deg, #9fdac5, #f8e6b7);   color: var(--ac-brown);   font-weight: 800; }  /* ---------- 闁诡噮鍓氱拠鐐电玻?---------- */ .floating-shell {   position: relative;   width: 100vw;   height: 100vh;   background: transparent;   pointer-events: none;   user-select: none; }  .floating-shell::before {   display: none; }  .floating-shell button, .floating-shell input, .floating-panel, .dialogue-bubble, .bubble-menu {   -webkit-app-region: no-drag;   pointer-events: auto; }  /* ---------- Mood meter ---------- */ .omega-avatar {   position: absolute;   left: 50%;   bottom: 0;   width: 420px;   height: 620px;   border: 0;   background: transparent;   pointer-events: auto;   filter: drop-shadow(0 24px 22px rgba(93, 64, 55, 0.22));   transform: translateX(-50%);   transition: transform 0.24s ease, filter 0.24s ease; }  .omega-avatar:hover {   transform: translateX(-50%) translateY(-5px) rotate(-1deg); }  .omega-avatar img {   display: block;   width: 100%;   height: 100%;   object-fit: contain;   pointer-events: none; }  .omega-avatar--happy, .omega-avatar--proud {   filter: drop-shadow(0 24px 22px rgba(93, 64, 55, 0.22)) drop-shadow(0 0 14px rgba(245, 195, 28, 0.5)); }  .omega-avatar--sad, .omega-avatar--calm_negative {   filter: drop-shadow(0 24px 22px rgba(93, 64, 55, 0.22)) saturate(0.82) brightness(0.92); }  .omega-avatar--shy {   filter: drop-shadow(0 24px 22px rgba(93, 64, 55, 0.22)) drop-shadow(0 0 14px rgba(248, 166, 178, 0.42)); }  /* ---------- Status bar ---------- */ .bubble-menu {   position: absolute;   right: 34px;   top: 112px;   display: grid;   gap: 12px; }  .bubble-menu button, .chat-form button, .floating-panel button, .dialogue-bubble button, .prologue-screen button, .capsule-topbar button, .desk-action {   min-height: 42px;   border: 1px solid rgba(255, 255, 255, 0.72);   border-radius: 999px;   background: rgba(255, 250, 240, 0.76);   backdrop-filter: blur(12px);   color: var(--ac-brown);   padding: 10px 18px;   box-shadow: 0 12px 24px rgba(93, 64, 55, 0.13);   font-weight: 900;   transition: transform 0.18s ease, box-shadow 0.18s ease, background 0.18s ease; }  .bubble-menu button:nth-child(2n) {   background: rgba(232, 247, 239, 0.76); }  .bubble-menu button:hover, .chat-form button:hover, .floating-panel button:hover, .dialogue-bubble button:hover, .prologue-screen button:hover, .capsule-topbar button:hover, .desk-action:hover {   background: #fff6c8;   transform: translateY(-2px);   box-shadow: 0 16px 26px rgba(93, 64, 55, 0.16); }  .bubble-menu button:active, .chat-form button:active, .floating-panel button:active, .dialogue-bubble button:active, .prologue-screen button:active, .capsule-topbar button:active, .desk-action:active {   transform: translateY(2px);   box-shadow: 0 8px 14px rgba(93, 64, 55, 0.1); }  .bubble-menu .is-locked {   color: #a99c83;   background: #ece5d6; }  /* ---------- 闂侇偅姘ㄩ弫銈夋閵忊剝绶?---------- */ .floating-panel {   position: absolute;   right: 24px;   bottom: 82px;   width: min(520px, calc(100vw - 48px));   padding: 16px;   border: 1px solid rgba(255, 255, 255, 0.58);   border-radius: 18px;   background: rgba(255, 250, 240, 0.68);   backdrop-filter: blur(18px);   box-shadow: 0 20px 42px rgba(33, 28, 24, 0.16); }  /* 闁告瑯鍨辩€氬宕濋妸顭戝敹鐟滅増娲熷浼村级?*/ .record-panel {   position: fixed;   top: 82px;   bottom: 82px;   width: min(480px, calc(100vw - 48px));   cursor: move; }  .record-panel header {   display: flex;   align-items: center;   justify-content: space-between; }  .record-panel h2, .compact-panel h2 {   margin: 0;   color: var(--ac-brown);   font-size: 16px; }  .record-list {   height: calc(100% - 48px);   overflow: auto;   padding-right: 4px; }  .record-list p, .compact-panel p, .empty-copy {   color: #806851;   line-height: 1.55; }  /* ---------- 閻庣數顢婇惁钘夘潩閺冣偓閸︽椽鏁嶉崼锝勫枈濠㈠灈鏅犲浼村级閸栵紕绀?---------- */ .dialogue-bubble {   position: relative;   width: auto;   min-width: 220px;   max-width: min(330px, calc(50vw - 42px));   gap: 10px;   transform: translateX(-4px); }
   .dialogue-bubble::-webkit-scrollbar {
   width: 6px;
 }
@@ -175,56 +175,19 @@
   font-size: 11px;
   text-align: center;
 }
-/* ---------- BetterGI 按钮 ---------- */
-.game-panel__bettergi {
-  margin-top: 4px;
+.game-bot__task--quick {
+  grid-column: 1 / -1;
+  border-color: rgba(25, 200, 185, 0.55);
+  background: rgba(25, 200, 185, 0.12);
 }
-.game-panel__divider {
-  border: none;
-  border-top: 1px solid var(--ac-line);
-  margin: 12px 0;
-}
-.game-panel__bettergi-label {
-  display: flex;
-  align-items: center;
-  gap: 8px;
-  margin: 0 0 10px;
-  color: var(--ac-soft-brown);
-  font-size: 13px;
-  font-weight: 700;
-}
-.game-panel__status-dot {
-  width: 8px;
-  height: 8px;
-  border-radius: 50%;
-  display: inline-block;
-}
-.game-panel__status-dot--idle { background: #888; }
-.game-panel__status-dot--launching { background: #ffcc00; animation: pulse 1s infinite; }
-.game-panel__status-dot--running { background: #44cc66; }
-.game-panel__status-dot--error { background: #ff4444; }
-@keyframes pulse {
-  0%, 100% { opacity: 1; }
-  50% { opacity: 0.4; }
-}
-.game-panel__btn--launch {
-  background: rgba(68, 204, 102, 0.1);
-  border-color: #44cc66;
-  color: #44cc66;
-}
-.game-panel__btn--launch:hover:not(:disabled) {
-  background: #44cc66;
+.game-bot__task--quick .game-bot__task-icon {
+  background: var(--ac-mint);
   color: #fff;
 }
-.game-panel__btn--launch:disabled {
-  opacity: 0.6;
-  cursor: not-allowed;
+.game-bot__task--quick:hover {
+  background: rgba(25, 200, 185, 0.2);
+  border-color: var(--ac-mint);
 }
-.game-panel__error {
-  margin: 8px 0 0;
-  color: #ff4444;
-  font-size: 12px;
-}   /* ---------- 缁楊兛绨╅幋鍧楁？ ---------- */ .room2-label {   position: absolute;   top: 12px;   left: 50%;   transform: translateX(-50%);   margin: 0;   color: #4488aa;   font-size: 12px;   font-weight: 700;   pointer-events: none;   -webkit-app-region: no-drag; }   /* ---------- 娑旓附鐏﹂棃銏℃緲 ---------- */ .bookshelf-panel {   display: grid;   gap: 12px;   max-height: min(500px, calc(100vh - 120px)); }  .bookshelf-panel--reading {   max-height: min(520px, calc(100vh - 80px)); }  .bookshelf-panel__header {   display: flex;   align-items: center;   gap: 8px;   flex-wrap: wrap; }  .bookshelf-panel__header h2 {   margin: 0;   flex: 1; }  .bookshelf-panel__tabs {   display: flex;   gap: 4px; }  .bookshelf-panel__tabs button {   padding: 4px 10px;   border: 1px solid var(--ac-line);   border-radius: 999px;   background: transparent;   color: var(--ac-soft-brown);   font-size: 12px;   font-weight: 700;   cursor: pointer; }  .bookshelf-panel__tabs .bookshelf-tab--active {   border-color: var(--ac-mint);   color: var(--ac-mint-dark);   background: rgba(25, 200, 185, 0.08); }  .bookshelf-panel__locked {   color: var(--ac-soft-brown);   font-style: italic;   text-align: center;   padding: 16px 0; }  .bookshelf-panel__list {   display: grid;   gap: 6px;   max-height: 320px;   overflow-y: auto; overflow-x: hidden; }
   .dialogue-bubble::-webkit-scrollbar {
   width: 6px;
 }

@@ -69,19 +69,14 @@ npm run test:e2e
 - 正式美术资源和动作序列。
 - 闹钟倒计时、专注累计时长。
 - 合成机、装修、扩建、书架写作周期。
-- 游戏代打能力。
 - 主线 2 以后完整剧情。
 
-## BetterGI (Game Automation)
+## 游戏代打（自动接管）
 
-BetterGI is an external ~1GB tool, so it is not committed to this repo.
+游戏代打能力已接入 Ω 工作台：事项 -> 游戏 -> 一键开始。
 
-First-time setup:
-`powershell
-cd game
-powershell -ExecutionPolicy Bypass .\scripts\setup-bettergi.ps1
-`
+玩家不需要手动下载、安装或打开任何第三方工具。首次点击时会由后端自动准备代打环境：优先使用仓库内 `game/bettergi/` 的离线包，没有时才从官方源拉取，准备过程对玩家不可见。
 
-The script downloads the latest BetterGI portable release from GitHub and extracts it to game/bettergi/. You can also download it manually from https://github.com/babalae/better-genshin-impact/releases and place BetterGI.exe at game/bettergi/BetterGI/BetterGI.exe.
+需要本机已经安装并启动过原神，后端会自动定位安装路径；原神未运行时，一键开始会先拉起原神并等待进入主界面。
 
-Launch it from the in-game panel: 事项 -> 游戏 -> 一键启动 BetterGI.
+开发者可以手动执行 `game/scripts/setup-bettergi.ps1` 预装引擎到 `game/bettergi/`，这样玩家首次使用时无需联网。

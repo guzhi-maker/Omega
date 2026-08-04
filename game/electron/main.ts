@@ -6,6 +6,34 @@ import path from "node:path";
 import { exec, execSync } from "node:child_process";
 import type { GameBotTaskId } from "./gameBot";
 const { gameBot } = require("./gameBot.cjs") as typeof import("./gameBot");
+
+// BetterGI 会以管理员权限运行，Omega 也必须以管理员身份启动才能接管它。
+function isElevated(): boolean {
+  try {
+    const out = execSync(
+      `powershell -NoProfile -Command "([Security.Principal.WindowsPrincipal][Security.Principal.WindowsIdentity]::GetCurrent()).IsInRole([Security.Principal.WindowsBuiltInRole]::Administrator)"`,
+      { encoding: "utf8", timeout: 5000, windowsHide: true }
+    );
+    return out.trim() === "True";
+  } catch {
+    return false;
+  }
+}
+
+if (!isElevated() && process.env.OMEGA_NO_ELEVATE !== "1") {
+  try {
+    const script = path.join(__dirname, "..", "scripts", "elevate.ps1");
+    const args = process.argv.slice(1);
+    const argLine = args.map((arg) => `"${arg.replace(/"/g, '\\"')}"`).join(" ");
+    execSync(
+      `powershell -NoProfile -ExecutionPolicy Bypass -File "${script}" -ExePath "${process.execPath.replace(/"/g, '\\"')}"${argLine ? ` -AppArgs ${argLine}` : ""}`,
+      { timeout: 20_000, windowsHide: true }
+    );
+  } catch {
+    // 用户拒绝提权时继续以普通权限启动，代打功能会提示需要管理员权限。
+  }
+  app.exit(0);
+}
 try {
   const envPath = path.join(__dirname, "..", ".env.local");
   if (existsSync(envPath)) {

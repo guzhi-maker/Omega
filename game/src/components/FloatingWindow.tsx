@@ -15,8 +15,6 @@ import {
   applyMilestoneReward,
   pickPeriodicTopic,
   ALL_MILESTONES,
-  isGameUnlockReady,
-  getGameUnlockReason,
 } from "../systems/storyMilestones";
 import { generateOptions } from "../systems/optionAgent";
 import type { AgentOption } from "../systems/optionAgent";
@@ -449,9 +447,6 @@ export function FloatingWindow({ state, setState, updateState }: Props) {
     await window.omega.window.openCapsule();
   }
 
-  // ---------- 游戏解锁条件（M6） ----------
-  const gameUnlockReady = isGameUnlockReady(state);
-  const gameUnlockReason = getGameUnlockReason(state);
 
   // ---------- 点击头像 ----------
   function handleAvatarClick(e?: React.MouseEvent) {
@@ -763,14 +758,11 @@ export function FloatingWindow({ state, setState, updateState }: Props) {
           </button>
           <button
             type="button"
-            className={!state.unlocked.game || moodLocked ? "is-locked" : ""}
+            className={moodLocked ? "is-locked" : ""}
             onClick={(e) => {
               e?.stopPropagation();
               if (moodLocked) {
                 lowMoodBlock("game");
-              } else if (!gameUnlockReady && gameUnlockReason) {
-                setClickBubble(gameUnlockReason);
-                setTimeout(() => setClickBubble(null), 4000);
               } else {
                 openPanel("game");
               }
@@ -888,7 +880,6 @@ export function FloatingWindow({ state, setState, updateState }: Props) {
           updateState={updateState}
           onClose={() => { closePanel(); }}
           setClickBubble={setClickBubble}
-          lockReason={gameUnlockReason}
         />
       )}
       {panel === "crafting" && (
@@ -1486,5 +1477,3 @@ function DraggablePanel({
     </section>
   );
 }
-
-

@@ -12,7 +12,6 @@ type Props = {
   updateState: (partial: Partial<OmegaState>) => Promise<OmegaState>;
   onClose: () => void;
   setClickBubble: (msg: string | null) => void;
-  lockReason?: string | null;
 };
 
 type BotStatus = {
@@ -35,7 +34,7 @@ const TASK_LABELS: Record<string, string> = Object.fromEntries(
   TASKS.map((t) => [t.id, t.label])
 );
 
-export default function GamePanel({ state, updateState, onClose, setClickBubble, lockReason }: Props) {
+export default function GamePanel({ state, updateState, onClose, setClickBubble }: Props) {
   const [busyTask, setBusyTask] = useState<string | null>(null);
   const [botStatus, setBotStatus] = useState<BotStatus>({
     running: false,
@@ -87,36 +86,11 @@ export default function GamePanel({ state, updateState, onClose, setClickBubble,
     setTimeout(() => setClickBubble(null), 3200);
   }, [setClickBubble]);
 
-  const ensureEngine = useCallback(async (): Promise<boolean> => {
-    if (!window.omega?.gamebot) {
-      setError("代打服务仅支持 Electron 桌面模式");
-      return false;
-    }
-    const s = await window.omega.gamebot.status();
-    if (s.engineReady) return true;
-    setStarting(true);
-    setError(null);
-    try {
-      const r = await window.omega.gamebot.start();
-      if (!r.success) {
-        setError(r.error || "引擎启动失败");
-        return false;
-      }
-      speak("稍等，我先把自己的手洗干净……好了，我可以开始了。");
-      return true;
-    } catch (err) {
-      setError(String(err));
-      return false;
-    } finally {
-      setStarting(false);
-    }
-  }, [speak]);
 
   const handleRunTask = useCallback(async (taskId: string) => {
     if (busyTask || starting || !window.omega?.gamebot) return;
     setError(null);
-    const ready = await ensureEngine();
-    if (!ready) return;
+    setStarting(true);
     try {
       const r = await window.omega.gamebot.runTask(taskId);
       if (r.success) {
@@ -130,8 +104,14 @@ export default function GamePanel({ state, updateState, onClose, setClickBubble,
       }
     } catch (err) {
       setError(String(err));
+    } finally {
+      setStarting(false);
     }
-  }, [busyTask, starting, ensureEngine, speak, updateState]);
+  }, [busyTask, starting, speak, updateState]);
+
+  const handleQuickStart = useCallback(() => {
+    void handleRunTask("daily");
+  }, [handleRunTask]);
 
   const handleStopTask = useCallback(async () => {
     if (!window.omega?.gamebot) return;
@@ -152,10 +132,10 @@ export default function GamePanel({ state, updateState, onClose, setClickBubble,
     : starting
       ? "正在准备……"
       : botStatus.engineReady
-        ? "待命中"
-        : "引擎未就绪";
+        ? "随时可以开工"
+        : "随时可以开工";
 
-  const statusClass = busyTask ? "working" : starting ? "starting" : botStatus.engineReady ? "ready" : "offline";
+  const statusClass = busyTask ? "working" : starting ? "starting" : "ready";
 
   return (
     <section className="floating-panel compact-panel game-panel game-bot-panel">
@@ -171,17 +151,11 @@ export default function GamePanel({ state, updateState, onClose, setClickBubble,
 
       {error && <p className="game-bot__error">{error}</p>}
 
-      {lockReason && (
-        <div className="game-bot__locked">
-          <p>{lockReason}</p>
-          <small>条件满足后，游戏功能就会解锁。</small>
-        </div>
-      )}
 
       {busyTask || starting ? (
         <div className="game-bot__working">
           <div className="game-bot__spinner" />
-          <p>{starting ? "Ω 正在准备辅助引擎……" : `Ω 正在处理${TASK_LABELS[busyTask!] ?? "任务"}……`}</p>
+          <p>{starting ? "Ω 正在做准备……" : `Ω 正在处理${TASK_LABELS[busyTask!] ?? "任务"}……`}</p>
           {busyTask && (
             <button type="button" className="game-bot__stop-btn" onClick={(e) => { e?.stopPropagation(); handleStopTask(); }}>
               让 Ω 停下
@@ -190,6 +164,17 @@ export default function GamePanel({ state, updateState, onClose, setClickBubble,
         </div>
       ) : (
         <div className="game-bot__tasks">
+          <button
+            type="button"
+            className="game-bot__task game-bot__task--quick"
+            onClick={(e) => { e?.stopPropagation(); handleQuickStart(); }}
+          >
+            <span className="game-bot__task-icon">▶</span>
+            <span className="game-bot__task-body">
+              <strong>一键开始</strong>
+              <small>日常一条龙</small>
+            </span>
+          </button>
           {TASKS.map((task) => (
             <button
               key={task.id}
@@ -207,7 +192,7 @@ export default function GamePanel({ state, updateState, onClose, setClickBubble,
         </div>
       )}
 
-      <p className="game-bot__footnote">好感度 {state.affinity} · Ω 还在学着认识这台游戏机</p>
+      <p className="game-bot__footnote">好感度 {state.affinity} · Ω 会看好这台游戏机</p>
 
       <button type="button" onClick={(e) => { e?.stopPropagation(); onClose(); }}>
         关闭
