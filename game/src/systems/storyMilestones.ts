@@ -6,6 +6,7 @@
  */
 
 import type { OmegaState } from "../types";
+import { createInitialDiary } from "./writing";
 
 /** 所有可用里程碑 ID 列表 */
 export const ALL_MILESTONES = [
@@ -211,9 +212,13 @@ export function applyMilestoneReward(
       };
       break;
     case "m7_writing":
+      // M7 的奖励不只是显示书架：先写下第一篇日记，之后由书架按两天节奏续写。
+      const firstDiary = createInitialDiary(currentState);
       partial.mood = Math.min(1000, (currentState.mood ?? 0) + 20);
       partial.affinity = (currentState.affinity ?? 0) + 5;
       partial.emotion = "calm_positive";
+      partial.stories = [...(currentState.stories ?? []), firstDiary].slice(-999);
+      partial.lastWritingAt = firstDiary.createdAt;
       partial.unlocked = {
         ...(currentState.unlocked ?? {}),
         bookshelf: true,

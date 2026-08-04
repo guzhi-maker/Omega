@@ -1122,3 +1122,23 @@
 .m0-capsule-bubble--static .m0-capsule-bubble__tail {
   display: none;
 }
+
+/* ---------- M7 bookshelf writing controls ---------- */
+.bookshelf-panel__write-actions {
+  display: flex;
+  flex-wrap: wrap;
+  gap: 8px;
+  justify-content: flex-end;
+}
+
+.bookshelf-panel__write-actions button:disabled {
+  cursor: not-allowed;
+  opacity: 0.55;
+}
+
+.bookshelf-panel__schedule {
+  margin: 0 0 10px;
+  color: var(--ac-soft-brown);
+  font-size: 12px;
+  line-height: 1.5;
+}
