@@ -26,6 +26,7 @@ export type AffectionLevel = "low" | "medium" | "high";
 
 export type OmegaStory = {
   id: string;
+  kind?: "diary" | "story";
   title: string;
   content: string;
   createdAt: number;
@@ -78,6 +79,8 @@ export type OmegaState = {
   equippedDecorations: Record<string, string>;
   /** Ω 写的故事 */
   stories: OmegaStory[];
+  /** 最近一次由 Ω 写日记的时间；M7 日记每两天至多生成一次 */
+  lastWritingAt: number;
   /** 房间2是否解锁 */
   room2Unlocked: boolean;
   /** room2 furniture positions */

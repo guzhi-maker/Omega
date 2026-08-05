@@ -20,6 +20,7 @@ const defaultState: OmegaState = {
   capsuleDecoration: {},
   equippedDecorations: {},
   stories: [],
+  lastWritingAt: 0,
   room2Unlocked: false,
   room2Furniture: {},
   sessionStartTime: Date.now(),

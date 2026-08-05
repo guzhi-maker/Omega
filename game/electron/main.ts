@@ -80,6 +80,7 @@ type OmegaAIResponse = {
 
 type OmegaStory = {
   id: string;
+  kind?: "diary" | "story";
   title: string;
   content: string;
   createdAt: number;
@@ -121,6 +122,7 @@ type OmegaState = {
   equippedDecorations: Record<string, string>;
   room2Unlocked: boolean;
   stories: OmegaStory[];
+  lastWritingAt: number;
 };
 
 type PersistedData = {
@@ -173,6 +175,7 @@ const defaultState: OmegaState = {
   equippedDecorations: {},
   room2Unlocked: false,
   stories: [],
+  lastWritingAt: 0,
 };
 
 function loadLocalEnv() {
